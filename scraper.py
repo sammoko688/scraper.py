@@ -2,7 +2,7 @@ from flask import Flask, jsonify
 import requests
 from bs4 import BeautifulSoup
 
-app = Flask(__name__)
+app = Flask(_name_)
 
 def scrape_data():
     url = "https://casinoscores.com/crazy-time/"
