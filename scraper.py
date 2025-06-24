@@ -4,30 +4,32 @@ from bs4 import BeautifulSoup
 
 app = Flask(__name__)
 
-def scrape_data():
-    url = "https://casinoscores.com/crazy-time/"
-    response = requests.get(url)
-    soup = BeautifulSoup(response.text, "html.parser")
-    rows = soup.select("table tbody tr")
+# Home route to confirm the service is live
+@app.route("/")
+def home():
+    return "✅ Crazy Time Tracker is running!"
 
-    data = []
-    for row in rows[:50]:  # latest 50 spins
-        spin = {}
-        cells = row.find_all("td")
-        if len(cells) > 2:
-            spin["time"] = cells[0].text.strip()
-            spin["result"] = cells[1].text.strip()
-            spin["multiplier"] = cells[2].text.strip()
-            data.append(spin)
-    return data
-
-@app.route("/crazytime", methods=["GET"])
+# Example scraping route
+@app.route("/data")
 def get_data():
-    try:
-        data = scrape_data()
-        return jsonify({"status": "success", "data": data})
-    except Exception as e:
-        return jsonify({"status": "error", "message": str(e)})
+    url = "https://casinoscores.com/crazy-time/"
+    headers = {
+        "User-Agent": "Mozilla/5.0"
+    }
 
-if __name__ == "_main_":
-    app.run(host="0.0.0.0", port=10000)
+    try:
+        response = requests.get(url, headers=headers)
+        response.raise_for_status()
+
+        soup = BeautifulSoup(response.text, "html.parser")
+
+        # Modify this to match real data on CasinoScores
+        results = []
+        game_elements = soup.select(".game-result-item")  # You must update this selector
+        for el in game_elements[:10]:
+            results.append(el.text.strip())
+
+        return jsonify({"status": "success", "results": results})
+
+    except Exception as e:
+        return jsonify({"status": "error", "message": str(e)}), 500
