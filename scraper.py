@@ -1,9 +1,9 @@
-from flask import Flask, jsonify
+Ffrom flask import Flask, jsonify
 import requests
 import json
 import re
 
-app = Flask(_name_)  # ✅ This is what was missing
+app = Flask(__name__)  # ✅ This is what was missing
 
 @app.route("/")
 def home():
