@@ -29,5 +29,5 @@ def get_data():
     except Exception as e:
         return jsonify({"status": "error", "message": str(e)})
 
-if _name_ == "_main_":
+if __name__ == "_main_":
     app.run(host="0.0.0.0", port=10000)
